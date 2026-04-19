@@ -2,9 +2,9 @@
 
 [![License: CC BY 4.0](https://img.shields.io/badge/License-CC_BY_4.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
 
-**{{PAPER_TITLE}}**
+**The Accumulation–Renewal Dilemma: Why Homogeneous Knowledge Degrades Intelligence and Only Asymmetric Renewal Restores It**
 
-{{ONE_PARAGRAPH_ABSTRACT}}
+All intelligent systems face an accumulation–renewal dilemma: accumulating knowledge increases capability but induces entrenchment, reducing responsiveness to new evidence. Independent domains — human confirmation bias, Kuhnian paradigm lock-in, original antigenic sin in immunology, Muller's ratchet in asexual reproduction, and context entrenchment in LLMs — converge on the same resolution: *asymmetric renewal*. This paper argues that the LLM context window is the first controllable experimental setting for this dilemma, and that direction-asymmetric session composition (deep + fresh) outperforms symmetric model diversity. The theoretical argument is developed here; companion empirical evidence lives in `planning/drafts/direction-empirical.md` pending integration.
 
 ## Repository Structure
 
