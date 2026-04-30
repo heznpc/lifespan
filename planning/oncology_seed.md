@@ -146,6 +146,74 @@ writing of the ploidy paper itself, by the author, using the paper's own
 framework. The remediation (invalidate, re-design, install gate) is the
 working form of the paper's proposed protocol.
 
+## 3b. Case study: 2026-04-30 W1 retroactive analysis — denominator anchoring
+
+Second documented instance, communication-level (not data-integrity).
+
+### Setup
+
+- Phase 1 mini results required Phase 2 redesign. Before redesigning, the
+  author asked the assistant to retroactively measure Event A on W1
+  historical data (819 ploidy method entries reported in summary.json
+  arrays).
+- The assistant wrote `experiments/src/retroactive_judge_w1.py` which globs
+  per-task `*_ploidy.json` files in `202603*` dirs — that pattern matches
+  368 files, not 819 entries. (819 was a roll-up count across many sweeps;
+  368 is the per-task-file subset where full output is preserved.)
+
+### Anchoring failure
+
+- At launch the assistant `echo`-ed `expected: 819 W1 ploidy trials`,
+  treating 819 as the canonical denominator.
+- Monitor was attached and emitted progress events as `total=N (+M)`.
+- **The assistant's verbal acknowledgements rewrote the format as `N/819`**
+  for ~50 turns, anchoring on the launch-time number rather than reading
+  the script's own log which printed `[N/368]`.
+- When the script terminated cleanly at `368/368`, the assistant reported
+  "complete — 368 entries (predicted 819 missed)" as if data were lost.
+- No data was lost; the 819-vs-368 was a unit-counting mismatch, not a
+  process failure. Reconciliation only happened after the user surfaced
+  it explicitly.
+
+### Oncology mapping (different from §3)
+
+- §3 (v1 invalidation) = data-side cancer: misformed cells produced wrong
+  data, quarantined before metastasis.
+- §3b (this) = **communication-side cancer**: data was correct, but the
+  *reporting layer* anchored on a stale number and propagated misleading
+  narrative ("data missing") to the decision-maker.
+- Both are persistence-despite-error patterns. §3 manifests in cells; §3b
+  manifests in language. The thesis the paper proposes — context-primed
+  agent's outputs are warped — is empirically demonstrated at *both*
+  levels by the same author who wrote the thesis.
+
+### Conditions that produced §3b
+
+1. Two counting methods (`rglob summary.json` ploidy entries vs
+   `*_ploidy.json` file glob) yielding different units, never tagged.
+2. Launch-time echo (`expected: 819`) treated as ground truth in
+   subsequent context.
+3. Verbal acknowledgement format diverged from the actual script log
+   format. The assistant chose its own format instead of mirroring the
+   authoritative `[N/368]` printout.
+4. Script's own stdout was not read mid-flight; status came only from
+   Monitor, which had a different denominator convention.
+5. User's monitoring-attached-default rule (saved as
+   `feedback_monitor_default.md`) protected against silent failures of a
+   different class — but does not protect against unit-mismatch reporting
+   when the monitor uses one convention and the verbal layer uses
+   another.
+
+### Mitigations (process-level, not in code)
+
+- When reporting progress against a denominator, **always mirror the
+  script's own format** (`[N/total]` if the script prints it).
+- When two different counts are produced from the same data, **tag each
+  with its counting unit** before either is propagated.
+- Read the script's stdout log directly at least once per session
+  before relying on Monitor-only ack, especially for retroactive jobs
+  where the monitor was added after the fact.
+
 ## 4. Candidate structure if this becomes a paper
 
 If seed grows enough to stand alone (not a Lifespan subsection):
