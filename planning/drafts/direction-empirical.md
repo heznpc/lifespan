@@ -68,7 +68,7 @@ Du et al. (EMNLP 2025), Feng et al. (2026), Chroma (2025).
 ### 2.3 Agent Scaling Approaches
 
 AgentSociety (2025), MiroFish (2026). 공통 한계: context 축적 편향 미다룸.
-Boca et al. (Science Advances, 2025): 집단 편향 출현.
+Ashery et al. (Science Advances, 2025): 집단 편향 출현.
 
 ---
 
