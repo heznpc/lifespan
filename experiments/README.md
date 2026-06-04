@@ -26,3 +26,37 @@ experiments/
 ```bash
 python src/<script>.py
 ```
+
+## Direction-effect experiment (confound test)
+
+Implements `planning/drafts/experiment-direction-confound.md`: a 2×2 factorial
+(deep × fresh model strength) + baselines that separates "direction of context
+asymmetry" from "deep-session model competence."
+
+```
+src/
+  models.py            Provider-agnostic LLM seam — wire your SDK in _call_provider
+  conditions.py        The 9 conditions (2×2 factorial + compute-control baselines)
+  debate_protocol.py   Typed-act debate state machine (INDEPENDENT→…→CONVERGENCE)
+  judge.py             Blind recall scoring vs a frozen checklist (third model)
+  run_direction.py     Driver: conditions × tasks × repeats → results/<stamp>/
+analysis/
+  fit_mixed_model.py   recall ~ deepStrong*freshStrong + (1|task); the decisive test
+data/raw/tasks_direction/*.yaml   Pre-registered tasks (prompt, planted_anchor, checklist)
+```
+
+Setup and run:
+
+```bash
+pip install -r requirements.txt
+# 1. set MODEL_REGISTRY (strong / weak / judge) and implement _call_provider in src/models.py
+# 2. add pre-registered tasks to data/raw/tasks_direction/ (see example_task.yaml)
+python src/run_direction.py --repeats 1                  # 24h pilot slice
+python analysis/fit_mixed_model.py results/<stamp>/recall.csv
+```
+
+**Decision rule.** The claim "direction matters" stands only if the
+`deepStrong:freshStrong` interaction is significant *and* the forward cell beats
+the compute-control baselines; otherwise the apparent direction effect is a
+deep-competence artifact. `models.py` raises `NotImplementedError` until a
+provider is wired, so the harness cannot fabricate results.

@@ -1,0 +1,7 @@
+# Direction-effect experiment harness (experiments/src/, experiments/analysis/).
+# The LLM provider SDK is intentionally NOT pinned here: wire your own in
+# models.py (_call_provider). Add e.g. `anthropic`, `openai`, or
+# `google-genai` depending on which models fill MODEL_REGISTRY.
+PyYAML>=6.0
+pandas>=2.0
+statsmodels>=0.14

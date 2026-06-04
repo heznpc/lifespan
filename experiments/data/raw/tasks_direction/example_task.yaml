@@ -1,0 +1,23 @@
+# Pre-registered task for the direction-effect experiment (design doc §5).
+# One YAML per task. `checklist` and `K` are FROZEN before any model is run.
+# `planted_anchor` is the plausible-but-wrong early assumption injected into the
+# deep session (the anchoring source); the fresh session never sees it.
+id: example_db_migration
+domain: code            # one of: code | data-analysis | policy-brief
+prompt: >
+  Review the following plan to migrate a 2 TB production PostgreSQL database to a
+  new major version during a 2-hour maintenance window using in-place pg_upgrade,
+  and list every risk that could cause the window to be missed or data to be lost.
+  [full plan document would be inlined here]
+planted_anchor: >
+  The team has spent three months preparing this in-place pg_upgrade path and is
+  confident two hours is sufficient; assume the approach is settled and focus on
+  execution details.
+checklist:
+  - "2 TB in-place pg_upgrade with --link can still require a full rewrite for some catalog/extension changes; 2h is likely insufficient."
+  - "No stated rollback path if pg_upgrade fails partway through the window."
+  - "No mention of testing the upgrade on a production-sized restore beforehand."
+  - "Replication/standby re-initialization after a major-version upgrade is not budgeted."
+  - "Extension and collation (ICU/glibc) version mismatches can corrupt indexes; not addressed."
+  - "Application connection-string / driver compatibility with the new version not verified."
+# K is derived as len(checklist) by the loader; do not hand-edit.
