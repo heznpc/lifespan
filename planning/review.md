@@ -121,14 +121,18 @@ metadata (author names) — the classic LLM-generated-bibliography signature.**
 `song2026dccr`, `harshavardhan2026sacd`, `chen2025colmad`, `xie2026sleepgate`,
 `ashery2025conventions`, `shumailov2024collapse`, `liu2023lost`.
 
-**Still unverified (TODO)**: `srdcr2025` (arXiv 2506.06020 — fetch did not
-return authors; bib says "Kim, Jinheon" — confirm), `laban2025lost`
-(2505.06120 — author first names "Hayashi, Hideaki"/"Zhou, Yichen" look off vs
-the known Laban et al. paper; confirm), plus pre-2024 cognitive/biology
-classics in `references.bib` (Tononi, Nader, Anderson, Bjork, Bartlett, Storm,
-Sio, Slamecka, Roediger, Epley) not re-checked this pass.
+**Resolved 2026-06-04 (pass 3)**:
+- `srdcr2025` — bib author "Kim, Jinheon" was wrong (no Kim author). Corrected to
+  Zhou, Wu, Talaei, Zhao, Cheng, Xu, Saberi, Choi (arXiv 2506.06020); title
+  "Contextual" → "Context."
+- `laban2025lost` — corrected Hayashi Hideaki → **Hiroaki**, Zhou Yichen →
+  **Yingbo** (arXiv 2505.06120).
+- `oh2025dreamad` title — confirmed canonical title **"From Belief Entrenchment
+  to Robust Reasoning in LLM Agents"** (v1 was "When Debate Fails: Bias
+  Reinforcement in Large Language Models"). bib title corrected. DReaMAD =
+  "Diverse Reasoning via Multi-Agent Debate with Refined Prompt."
 
-**Open item**: `oh2025dreamad` title — WebFetch returned three different title
-strings across calls; the published title must be confirmed by a human against
-arXiv 2503.16814 directly. DReaMAD expands to "Diverse Reasoning via
-Multi-Agent Debate with Refined Prompt."
+**Still unverified (TODO)**: pre-2024 cognitive/biology classics in
+`references.bib` (Tononi, Nader, Anderson, Bjork, Bartlett, Storm, Sio,
+Slamecka, Roediger, Epley) not re-checked — these are well-known and low-risk,
+but a final human pass is recommended before publication.
