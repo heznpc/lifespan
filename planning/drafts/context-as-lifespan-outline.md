@@ -114,7 +114,7 @@ context 비대칭(verification depth)이 의사결정 품질의 핵심 변수이
 ### 2.3 Context Degradation and Anchoring
 - Du et al. (EMNLP 2025): Context length가 성능을 떨어뜨림 (아키텍처 문제)
 - Chroma (2025): 유효 context 용량 = 광고의 60-70%
-- Feng et al. (2026): Prompt 기반 anchoring bias 완화는 통계적으로 무효
+- Lou & Sun (2026): Prompt 기반 anchoring bias 완화는 통계적으로 무효
 
 ### 2.4 Asymmetric Context as Mechanism
 - CCR (Song, 2026): Fresh session review, F1 향상 (p=0.008)
@@ -299,7 +299,7 @@ Deep Session의 context entrenchment를 해소하는 Semi-Fresh가 효과적인 
 
 **A. 유한한 물리적 기판이 선택적 망각을 강제한다**
 
-Tyree et al. (arXiv:2304.02594, 2023)은 "생물학적 뇌와 실리콘 하드웨어 모두
+van Rossum (arXiv:2304.02594, 2023)은 "생물학적 뇌와 실리콘 하드웨어 모두
 유사한 에너지 제약에 직면한다"고 명시했다. 핵심 관찰:
 
 - 생물학적 시냅스 가소성의 제한은 에너지 최적화의 결과이다.
@@ -314,7 +314,7 @@ Tyree et al. (arXiv:2304.02594, 2023)은 "생물학적 뇌와 실리콘 하드�
 
 **B. 두 시스템의 망각 압력: 공통점과 차이**
 
-Li et al. (arXiv:2402.14878, 2024)은 neuromorphic 하드웨어의 에너지 장벽 조절이
+Chen et al. (arXiv:2402.14878, 2024)은 neuromorphic 하드웨어의 에너지 장벽 조절이
 생물학적 시냅스의 메타가소성(metaplasticity)을 모사할 수 있음을 보였다.
 이것은 "생물학 → 하드웨어" 방향의 영감이며, 기존 GPU 기반 LLM이
 메타가소성과 동일한 메커니즘을 보인다는 주장은 아니다.
@@ -381,7 +381,7 @@ Bjork의 "desirable difficulties" [Bjork, 1994]는
 핵심: 인간의 망각은 버그가 아니라 **자원 관리 전략**이다.
 
 이 관찰은 인지과학에 국한되지 않는다.
-Liu et al. (arXiv:2405.20620, 2024)은 심리학, 신경과학, 교육학, 생태학, 언어학을 횡단하여
+Sha et al. (arXiv:2405.20620, 2024)은 심리학, 신경과학, 교육학, 생태학, 언어학을 횡단하여
 망각 메커니즘을 조사하고, ML의 계산 자원이 유한한 이상
 효율적 자원 할당을 위해 모델도 "잊어야" 한다고 서술했다.
 망각이 단일 도메인의 현상이 아니라 **유한한 자원을 가진 모든 시스템의 구조적 필요**라는 점을 지지한다.
@@ -821,7 +821,7 @@ memory confabulation amplification은 세션 간 context 오염이다.
 - Liu et al. (2026). "AceMAD: Breaking the Martingale Curse." arXiv:2603.06801.
 - Song (2026). "Cross-Context Review." arXiv:2603.12123.
 - Du et al. (2025). "Context Length Alone Hurts." EMNLP.
-- Feng et al. (2026). "Anchoring Bias in LLMs."
+- Lou, J. & Sun, Y. (2026). "Anchoring Bias in Large Language Models: An Experimental Study." Journal of Computational Social Science 9(1). arXiv:2412.06593.
 - Shumailov et al. (2024). "AI models collapse when trained on recursively generated data." Nature.
 - Gerstgrasser et al. (2024). "A Note on Shumailov et al. (2024)." arXiv:2410.12954.
 - Alemohammad et al. (2024). "Self-Consuming Generative Models Go MAD." ICLR 2024. arXiv:2307.01850.

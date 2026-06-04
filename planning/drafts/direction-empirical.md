@@ -63,7 +63,7 @@ CCR (Song, 2026) fresh session review F1 향상.
 
 ### 2.2 Context Degradation and Anchoring
 
-Du et al. (EMNLP 2025), Feng et al. (2026), Chroma (2025).
+Du et al. (EMNLP 2025), Lou & Sun (2026), Chroma (2025).
 
 ### 2.3 Agent Scaling Approaches
 
