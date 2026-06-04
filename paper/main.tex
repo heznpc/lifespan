@@ -21,12 +21,277 @@ Independent Researcher\\
 \maketitle
 
 \begin{abstract}
-% TODO: Draft English abstract. Korean draft and full outline in
-% planning/drafts/context-as-lifespan-outline.md.
+Intelligent systems improve by accumulating knowledge, yet accumulation also
+induces \emph{entrenchment}: a growing insensitivity to evidence that conflicts
+with what has already been stored. We argue that this accumulation--renewal
+dilemma recurs across substrates that have no mechanism in common---human
+confirmation bias, paradigm lock-in in science \citep{kuhn1962structure},
+the incumbent's trap in firms \citep{christensen1997innovator}, and context
+entrenchment in large language models (LLMs)---and that each independently
+arrives at the same structural resolution: \emph{asymmetric renewal}, the
+controlled injection of a perspective that did not accumulate the same context.
+We make this a design principle---the \textbf{Principle of Least Context}: give
+an agent the minimum context its task requires, because additional context is a
+source of bias before it is a source of capability. We position the LLM context
+window as the first cheaply controllable testbed for the dilemma, and report a
+small pilot suggesting that \emph{context} asymmetry (deep vs.\ fresh sessions)
+can outperform \emph{model} diversity (cross-model debate). We are deliberate
+about the pilot's weakness: with three tasks and a single run per condition, an
+apparent ``direction-of-asymmetry'' effect is confounded with deep-session model
+competence and cannot be claimed; we specify a pre-registered, confound-
+controlled experiment that would adjudicate it. The contribution of this paper
+is the framework and the principle, not the pilot. Code, task checklists, and
+the experimental design are released for independent replication.
 \end{abstract}
 
-% TODO: Sections to be drafted from planning/drafts/context-as-lifespan-outline.md.
-% Companion empirical evidence: planning/drafts/direction-empirical.md.
+\section{Introduction}
+
+Programmers know a particular experience: after hours stuck on a bug, you write
+down what you have learned and \emph{start over in a clean session}. Often the
+fresh start succeeds where persistence failed---the accumulated trail of
+attempts had itself constrained the search. The same pattern recurs at larger
+scales. Experienced incumbents stall in their own conventions while a newcomer,
+unburdened by the accumulated context, reshapes the field
+\citep{christensen1997innovator}. \emph{Accumulation is itself a source of bias,
+and renewal tends to arrive from outside.}
+
+Human progress is built on accumulated knowledge, yet the paradox that
+accumulated knowledge impedes its own revision is repeatedly observed. Paradigm
+shifts proceed less by persuading entrenched scientists than by generational
+turnover \citep{kuhn1962structure}; quantitatively, the premature death of an
+eminent scientist is followed by a measurable rise in non-collaborator entry and
+new directions in the affected field \citep{azoulay2019}. We call the general
+phenomenon the \emph{accumulation--renewal dilemma}: accumulating knowledge
+raises capability while inducing entrenchment that lowers responsiveness to new
+evidence.
+
+\paragraph{Stochastic branching.} An LLM answers the same prompt differently
+across sessions. A user who stays in one session lets the stochastic sample of
+the first response constrain the entire downstream trajectory. Spawning $N$
+agents that share one accumulated context does not fix this: they sample $N$
+times from the \emph{same} biased distribution. Recent results make the limit
+precise---under symmetric information, debate among agents induces a martingale
+over belief trajectories, so debate alone does not improve expected correctness
+\citep{choi2025debate}. Breaking the martingale requires an \emph{asymmetry}
+between the participants \citep{liu2026acemad,young2026divergence}.
+
+\paragraph{The LLM as a controllable analog.} Where human generational turnover
+takes decades, an LLM session can be renewed instantly and the conflict between
+old and new context can be staged under control. This makes the context window
+the first setting in which the accumulation--renewal dilemma is cheaply
+manipulable rather than merely observed.
+
+\paragraph{Contributions.}
+(i) We formalize the accumulation--renewal dilemma and the Principle of Least
+Context (\S\ref{sec:framework}).
+(ii) We report a pilot indicating that context asymmetry can outperform model
+diversity, and we are explicit about what the pilot cannot show
+(\S\ref{sec:pilot}).
+(iii) We specify a pre-registered experiment that separates ``direction of
+asymmetry'' from deep-session competence (\S\ref{sec:pilot}).
+The framework and principle are the contribution; the empirical material is a
+preliminary probe.
+
+\section{Related Work}
+
+\paragraph{Context degradation.} Performance degrades with context length even
+under perfect retrieval \citep{du2025context,liu2023lost}, and effective context
+capacity is well below advertised windows \citep{chroma2025contextrot,
+scaling2026paradox}. Multi-turn accumulation reshapes model confidence
+\citep{harshavardhan2026sacd} and causes models to ``get lost''
+\citep{laban2025lost}; interaction context tends to increase sycophancy
+\citep{jain2025sycophancy}; prompt-based debiasing of anchoring is
+statistically ineffective \citep{feng2026anchoring}.
+
+\paragraph{Multi-agent debate.} Symmetric debate is a martingale
+\citep{choi2025debate}; asymmetric cognitive potential can restore positive
+drift \citep{liu2026acemad}, and debate's value scales with knowledge divergence
+between participants \citep{young2026divergence}. Cross-context review in a fresh
+session improves output quality \citep{song2026ccr}, while adding rounds adds
+noise \citep{song2026dccr}. Related lines reframe debate cooperatively
+\citep{chen2025colmad}, with typed epistemic acts
+\citep{debate2026deliberation}, with self-reflective context adjudication
+\citep{srdcr2025}, or study when debate genuinely helps
+\citep{wu2025debate,m2cl2026}. Entrenchment in debate itself is documented
+\citep{oh2025dreamad}.
+
+\paragraph{Scaling without renewal.} Large agent simulations scale population
+size \citep{pang2025agentsociety}; collective bias can emerge even when no
+individual agent is biased \citep{ashery2025conventions}; behavior degrades over
+extended interaction \citep{rath2026agentdrift}. At the training scale,
+recursively training on synthetic output collapses quality and diversity
+\citep{shumailov2024collapse,alemohammad2024mad}.
+
+\paragraph{Cognitive and biological background.} The dilemma's vocabulary is
+borrowed, not claimed as mechanism: anchoring-and-adjustment
+\citep{epley2006anchoring}, retrieval-induced and desirable forgetting
+\citep{storm2012forgetting,slamecka1978generation,roediger2006test}, incubation
+\citep{sio2009incubation}, reconstructive memory \citep{bartlett1932remembering},
+sleep-dependent synaptic down-selection \citep{tononi2014plasticity}, energetic
+limits that force selective plasticity
+\citep{tyree2023competitive,li2024energyefficiency}, and forgetting as resource
+management \citep{liu2024forgettingsurvey,xie2026sleepgate}.
+
+\section{Framework: The Accumulation--Renewal Dilemma}
+\label{sec:framework}
+
+\paragraph{Definitions.} Let an agent $a$ accumulate context over a session.
+
+\begin{description}
+\item[Definition 1 (Context Lifespan).] $L(a)$ is the total accumulated context
+(in tokens) from session start to the present.
+\item[Definition 2 (Context Entrenchment).] $E(a,L)$ is the probability that
+$a$, at lifespan $L$, produces a response consistent with its own initial
+stochastic sample.
+\end{description}
+
+\begin{description}
+\item[Hypothesis 1 (Entrenchment Monotonicity).] $E(a,L)$ is non-decreasing
+in $L$.
+\item[Hypothesis 2 (Asymmetric Advantage).] A structured debate between two
+agents with \emph{different} $L$ improves decision quality over a debate between
+two agents with the \emph{same} $L$.
+\item[Hypothesis 3 (Generational Innovation).] Periodically introducing a fresh
+agent into a structured conflict yields better long-run decisions than a
+homogeneous population.
+\end{description}
+
+\paragraph{Where the analogy holds and breaks.} The analogy is structural, not
+mechanistic, and we mark its limits explicitly. It \emph{holds} for
+anchoring, consistency-seeking, and the ``fresh eyes'' advantage. It
+\emph{breaks} in that an LLM's ``fresh'' session is literally zero-context
+(a human newcomer brings a different lifetime of experience), session renewal
+is non-destructive (human turnover is irreversible), and human institutions add
+political dynamics absent from the LLM case. Convergence across substrates is
+suggestive of a shared \emph{design constraint}, not evidence of a shared
+mechanism, and the set of substrates is curated rather than exhaustive.
+
+\paragraph{The Principle of Least Context.} The security principle of least
+privilege \citep{saltzer1975protection} has cognitive force here.
+
+\begin{quote}
+\textbf{Principle of Least Context.} Provide an agent with the minimum context
+its task requires. Additional context is a source of bias before it is a source
+of capability.
+\end{quote}
+
+This runs against the industry assumption that a longer context window is
+strictly better.
+
+\paragraph{Low species diversity.} A complementary reason renewal must be
+engineered: LLMs share an architecture \citep{vaswani2017attention} and overlap
+heavily in training data, and their representations appear to converge
+\citep{huh2024platonic}. ``Model diversity'' is therefore shallow; differences
+in \emph{context} may be a more reliable source of useful disagreement than
+differences in model.
+
+\section{A Pilot Probe, and the Confound It Cannot Resolve}
+\label{sec:pilot}
+
+\paragraph{Setup.} As a first probe we ran three long-context tasks (each
+seeded with a plausible-but-wrong early assumption) under six conditions using a
+stronger and a weaker model, with a structured debate
+(\textsc{independent}$\rightarrow$\textsc{position}$\rightarrow$\textsc{challenge}
+$\rightarrow$\textsc{convergence}). Recall is the fraction of a fixed checklist
+of issues surfaced. Results are in Table~\ref{tab:pilot}.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lcc}
+\toprule
+Condition & Diversity type & Recall \\
+\midrule
+Single (strong) & baseline & 83.3\% \\
+Single (weak) & baseline & 58.9\% \\
+Cross-model symmetric & model & 74.4\% \\
+Same-model asymmetric (weak) & context & 90.0\% \\
+Cross-model asymmetric (strong deep $\rightarrow$ weak fresh) & model+context & 93.9\% \\
+Cross-model asymmetric (weak deep $\rightarrow$ strong fresh) & model+context & 60.0\% \\
+\bottomrule
+\end{tabular}
+\caption{Pilot results ($n=3$ tasks, single run per condition). Numbers are
+reported to one decimal place only to match the underlying counts; they are not
+precise estimates---see the caveat below.}
+\label{tab:pilot}
+\end{table}
+
+\paragraph{What the pilot suggests.} Two patterns are consistent with the
+framework. First, model diversity alone did not help (cross-model symmetric
+$74.4\% < 83.3\%$ single-strong), echoing the symmetric-debate martingale
+\citep{choi2025debate}. Second, same-model context asymmetry did help the weaker
+model ($58.9\% \rightarrow 90.0\%$), consistent with asymmetry as the active
+ingredient \citep{liu2026acemad,song2026ccr}.
+
+\paragraph{What the pilot cannot show.} The eye-catching contrast---strong-deep
+$\rightarrow$ weak-fresh ($93.9\%$) vs.\ weak-deep $\rightarrow$ strong-fresh
+($60.0\%$)---is \textbf{confounded}: the ``direction'' of asymmetry covaries with
+which model held the deep role, and the deep model's single-session baselines
+($83.3\%$, $58.9\%$) already track the debate outcomes. A competing explanation
+needs no notion of direction at all: \emph{final quality is dominated by the deep
+session's competence.} With $n=3$ and one run per cell, this null cannot be
+rejected, and we therefore make \emph{no} directional claim. We treat
+``direction matters'' as an open question, not a finding.
+
+\paragraph{A test that would resolve it.} We pre-register a
+$2\times2$ factorial---deep $\in\{\text{strong},\text{weak}\}\times$ fresh
+$\in\{\text{strong},\text{weak}\}$---with same-model asymmetry cells (which
+remove model identity entirely) and compute-control baselines (two strong agents
+sharing context; one strong model sampled twice). The decisive quantity is the
+\emph{deep$\times$fresh interaction} in
+$\text{recall}\sim\text{deepStrong}*\text{freshStrong}+(1\,|\,\text{task})$ over
+$\geq 30$ tasks with $\geq 3$ repeats and a blind third-model judge. If the
+interaction is null, the directional reading is rejected as a deep-competence
+artifact; if it survives \emph{and} exceeds the compute controls, the direction
+effect is real. Either outcome is informative. The full protocol, task
+checklists, and analysis are released with this paper.
+
+\section{Discussion}
+
+\paragraph{The incumbent trap.} The dilemma reframes the innovator's dilemma
+\citep{christensen1997innovator} mechanistically: an incumbent's ``experience''
+is accumulated context, a newcomer's ``naivety'' is fresh context, and the
+incumbent rationally misses disruption not from lack of ability but because
+accumulated context constrains the search space. The same dynamic appears at the
+session level: a deep session anchored on a long rationale fails to question it,
+while a fresh session flags the obvious objection immediately.
+
+\paragraph{Persistent memory as a confabulation amplifier.} The dilemma predicts
+a concrete failure in deployed tooling. Cross-session ``memory'' that injects a
+fixed store into every new session is exactly the homogeneous-accumulation
+pattern: opening a fresh session no longer yields fresh context, and any
+hallucination written to the store becomes the next session's trusted premise.
+This is a within-system analog of model collapse
+\citep{shumailov2024collapse}---a session-to-session echo of the chat-chamber
+effect, in which users come to trust AI-generated falsehoods
+\citep{jacob2025chatchamber}. The framework predicts the mitigations that help:
+periodic expiry (an engineered Planck principle) and citation verification
+(asymmetric checking). We describe the pattern at the level of mechanism; the
+specific deployed-product incidents that motivated it require primary-source
+confirmation before they can be cited as evidence.
+
+\paragraph{Design implication.} ``More agents, longer context'' is a limited
+direction. A few sessions with deliberately different context depth, surfaced
+through a structured protocol, may decide better than a large homogeneous
+population---a hypothesis the experiment above is designed to test.
+
+\section{Limitations}
+
+The completed empirical material is a single pilot ($n=3$ tasks, one run per
+condition, two models, author-constructed checklists, a single judge); its
+differences are within plausible run-to-run variance, and its headline contrast
+is confounded as discussed in \S\ref{sec:pilot}. The cross-substrate framing is
+an analogy whose mechanisms differ across substrates, and the substrate set is
+curated. Larger validation requires community-scale execution; the released
+design and harness are intended to enable it.
+
+\section{Conclusion}
+
+The accumulation--renewal dilemma names a pattern shared by minds, sciences,
+firms, and language models: homogeneous accumulation entrenches, and only the
+controlled injection of a non-accumulated perspective renews. The Principle of
+Least Context turns this into a design rule. Whether the \emph{direction} of
+asymmetry carries independent weight is left as a sharply specified, falsifiable
+question rather than asserted from a pilot.
 
 \bibliographystyle{plainnat}
 \bibliography{references}

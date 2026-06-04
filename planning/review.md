@@ -132,7 +132,16 @@ metadata (author names) — the classic LLM-generated-bibliography signature.**
   Reinforcement in Large Language Models"). bib title corrected. DReaMAD =
   "Diverse Reasoning via Multi-Agent Debate with Refined Prompt."
 
-**Still unverified (TODO)**: pre-2024 cognitive/biology classics in
-`references.bib` (Tononi, Nader, Anderson, Bjork, Bartlett, Storm, Sio,
-Slamecka, Roediger, Epley) not re-checked — these are well-known and low-risk,
-but a final human pass is recommended before publication.
+**Resolved 2026-06-04 (pass 4)**: pre-2024 classics in `references.bib`
+verified against primary sources — `azoulay2019`, `storm2012forgetting`,
+`sio2009incubation`, `slamecka1978generation`, `roediger2006test`,
+`epley2006anchoring`, `tononi2014plasticity` all correct (author/journal/year
+match). Author-name fabrication was confined to the recent (2025--2026) LLM
+entries; the classics are clean. Landmark framing refs added to the bib
+(`kuhn1962structure`, `christensen1997innovator`, `vaswani2017attention`,
+`huh2024platonic`, `alemohammad2024mad`, `saltzer1975protection`) with verified
+metadata. `paper/main.tex` drafted from the outline (honest framing: pilot +
+confound, no "killer result"); compiles clean (9 pp, 0 undefined citations).
+
+**Remaining**: nothing blocking — a final human read of the drafted manuscript
+before submission is the only open item.
